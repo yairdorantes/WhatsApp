@@ -9,7 +9,10 @@ dotenv.config();
 
 // const client = new Client();
 const client = new Client({
-  puppeteer: { args: ["--no-sandbox"], headless: true },
+  puppeteer: {
+    args: ["--no-sandbox", "--disable-setuid-sandbox"],
+    headless: true,
+  },
 });
 
 console.log(port);
