@@ -4,11 +4,11 @@ import { Client } from "whatsapp-web.js";
 import qrcode from "qrcode-terminal";
 import randomEmoji from "random-unicode-emoji";
 
+const port = process.env.PORT || 8000;
 dotenv.config();
 
 const client = new Client();
 
-const port = process.env.PORT || 8000;
 console.log(port);
 try {
   // const mongoose = require("mongoose");
