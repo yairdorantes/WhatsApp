@@ -8,7 +8,9 @@ const port = process.env.PORT || 8000;
 dotenv.config();
 
 // const client = new Client();
-const client = new Client({ puppeteer: { args: ["--no-sandbox"] } });
+const client = new Client({
+  puppeteer: { args: ["--no-sandbox"], headless: true },
+});
 
 console.log(port);
 try {
