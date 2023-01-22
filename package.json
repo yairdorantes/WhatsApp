@@ -4,8 +4,8 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "start": "node ./bin/www",
-    "dev": "nodemon myapp/src/index.js"
+    "dev": "nodemon myapp/src/index.js",
+    "start": "node myapp/src/index.js"
   },
   "dependencies": {
     "cors": "^2.8.5",
