@@ -7,6 +7,8 @@ import qrcode from "qrcode-terminal";
 // import randomEmoji from "random-unicode-emoji";
 import schedule from "node-schedule";
 import moment from "moment-timezone";
+import { mongo } from "../../database/DataBase.js";
+import Users from "../../models/Users.js";
 const port = process.env.PORT || 7000;
 dotenv.config();
 // const client = new Client();
@@ -17,7 +19,22 @@ const client = new Client({
   },
 });
 
-console.log(port);
+const allUsers = await Users.find({});
+// console.log(allUsers);
+allUsers.map((user) => {
+  user.reminders.map((reminder) => {
+    reminder.times.map((time) => {
+      // console.log(time);
+      const parts = time.split(":"),
+        reminder2 = `${parts[1]} ${parts[0]} * * ${reminder.days}`;
+      // console.log(reminder2);
+      const job = schedule.scheduleJob(reminder2, () => {
+        console.log("Task is running!");
+        // client.sendMessage(user.phone, text);
+      });
+    });
+  });
+});
 moment.tz.setDefault("America/Mexico_City");
 
 let myMessage;
@@ -27,23 +44,23 @@ try {
     console.log("Server is running on port", port);
     let date = new Date();
     let hour = date.getHours();
-    console.log(hour);
+    console.log("server hour:", hour);
   });
 } catch (e) {
   console.log(e);
 }
 
 client.on("qr", (qr) => {
-  qrcode.generate(qr, { small: true });
+  // qrcode.generate(qr, { small: true });
 });
 
 client.on("ready", () => {
   console.log("Client is ready!");
 });
 client.on("message_reaction", (reaction) => {
-  console.log(reaction);
+  // console.log(reaction);
 
-  console.log(myMessage, "myid");
+  // console.log(myMessage, "myid");
   if (reaction.msgId.id === myMessage) {
     console.log("reacciono a mensaje");
     if (reaction.reaction === "👍") yo.delete(true);
