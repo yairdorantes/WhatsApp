@@ -7,8 +7,8 @@ import qrcode from "qrcode-terminal";
 // import randomEmoji from "random-unicode-emoji";
 import schedule from "node-schedule";
 import moment from "moment-timezone";
-import { mongo } from "../../database/DataBase.js";
-import Users from "../../models/Users.js";
+// import { mongo } from "../../database/DataBase.js";
+// import Users from "../../models/Users.js";
 const port = process.env.PORT || 7000;
 dotenv.config();
 // const client = new Client();
@@ -19,22 +19,22 @@ const client = new Client({
   },
 });
 
-const allUsers = await Users.find({});
+// const allUsers = await Users.find({});
 // console.log(allUsers);
-allUsers.map((user) => {
-  user.reminders.map((reminder) => {
-    reminder.times.map((time) => {
-      // console.log(time);
-      const parts = time.split(":"),
-        reminder2 = `${parts[1]} ${parts[0]} * * ${reminder.days}`;
-      // console.log(reminder2);
-      const job = schedule.scheduleJob(reminder2, () => {
-        console.log("Task is running!");
-        // client.sendMessage(user.phone, text);
-      });
-    });
-  });
-});
+// allUsers.map((user) => {
+//   user.reminders.map((reminder) => {
+//     reminder.times.map((time) => {
+//       // console.log(time);
+//       const parts = time.split(":"),
+//         reminder2 = `${parts[1]} ${parts[0]} * * ${reminder.days}`;
+//       // console.log(reminder2);
+//       const job = schedule.scheduleJob(reminder2, () => {
+//         console.log("Task is running!");
+//         // client.sendMessage(user.phone, text);
+//       });
+//     });
+//   });
+// });
 moment.tz.setDefault("America/Mexico_City");
 
 let myMessage;

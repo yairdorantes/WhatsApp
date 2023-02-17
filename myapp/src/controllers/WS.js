@@ -1,17 +1,17 @@
 import randomEmoji from "random-unicode-emoji";
 import schedule from "node-schedule";
 import client from "../index.js";
-import Users from "../../../models/Users.js";
+// import Users from "../../../models/Users.js";
 // "35 6 16 * * 1,3,5"
 
 const setReminder = async (req, res) => {
   try {
     const { times, days, text, phone } = req.body;
     const number = `521${phone}@c.us`;
-    const user = await Users.findOne({ phone: number });
-    console.log(user);
-    user.reminders.push({ times, days, text });
-    await user.save();
+    // const user = await Users.findOne({ phone: number });
+    // console.log(user);
+    // user.reminders.push({ times, days, text });
+    // await user.save();
     console.log(req.body);
     times.map((time) => {
       try {
@@ -37,8 +37,8 @@ const getReminders = async (req, res) => {
   console.log(phone);
 
   try {
-    const user = await Users.findOne({ phone: `521${phone}@c.us` });
-    return res.json(user.reminders);
+    // const user = await Users.findOne({ phone: `521${phone}@c.us` });
+    // return res.json(user.reminders);
   } catch (err) {
     return res.status(500).json({ message: err.message });
   }
