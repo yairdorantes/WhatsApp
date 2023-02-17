@@ -1,6 +1,6 @@
 import randomEmoji from "random-unicode-emoji";
 import schedule from "node-schedule";
-import client from "../index.js";
+import client, { jobs } from "../index.js";
 // import Users from "../../../models/Users.js";
 // "35 6 16 * * 1,3,5"
 
@@ -12,16 +12,31 @@ const setReminder = async (req, res) => {
     // console.log(user);
     // user.reminders.push({ times, days, text });
     // await user.save();
-    console.log(req.body);
+    // console.log(req.body);
     times.map((time) => {
       try {
         const parts = time.split(":");
         const remainder = `${parts[1]} ${parts[0]} * * ${days}`;
-
+        const idJob = Date.now();
         const job = schedule.scheduleJob(remainder, () => {
           console.log("Task is running!");
-          client.sendMessage(`521${phone}@c.us`, text);
+          const msg = client.sendMessage(`521${phone}@c.us`, text);
+          msg.then((data) => {
+            const remind = jobs.find((trabajo) => trabajo.job === job);
+            if (remind) {
+              remind.text = data.id.id;
+            } else {
+              console.log("no se encontro trabajo");
+            }
+          });
         });
+        const newJob = {
+          id: idJob,
+          job,
+          text,
+        };
+        jobs.push(newJob);
+        // console.log(jobs);
       } catch (error) {
         console.log(error.message);
       }
