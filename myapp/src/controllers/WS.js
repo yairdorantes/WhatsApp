@@ -3,8 +3,8 @@ import schedule from "node-schedule";
 import client from "../index.js";
 import Users from "../../../models/Users.js";
 // "35 6 16 * * 1,3,5"
+
 const setReminder = async (req, res) => {
-  // const
   try {
     const { times, days, text, phone } = req.body;
     const number = `521${phone}@c.us`;
@@ -14,13 +14,17 @@ const setReminder = async (req, res) => {
     await user.save();
     console.log(req.body);
     times.map((time) => {
-      const parts = time.split(":");
-      const remainder = `${parts[1]} ${parts[0]} * * ${days}`;
-      // console.log(remainder);
-      const job = schedule.scheduleJob(remainder, () => {
-        console.log("Task is running!");
-        client.sendMessage(`521${phone}@c.us`, text);
-      });
+      try {
+        const parts = time.split(":");
+        const remainder = `${parts[1]} ${parts[0]} * * ${days}`;
+
+        const job = schedule.scheduleJob(remainder, () => {
+          console.log("Task is running!");
+          client.sendMessage(`521${phone}@c.us`, text);
+        });
+      } catch (error) {
+        console.log(error.message);
+      }
     });
     res.json({ message: "Reminder Activated!" });
   } catch (err) {
@@ -28,12 +32,24 @@ const setReminder = async (req, res) => {
   }
 };
 
+const getReminders = async (req, res) => {
+  const { phone } = req.params;
+  console.log(phone);
+
+  try {
+    const user = await Users.findOne({ phone: `521${phone}@c.us` });
+    return res.json(user.reminders);
+  } catch (err) {
+    return res.status(500).json({ message: err.message });
+  }
+};
+
 const sendMessage = async (req, res) => {
-  client.sendMessage("5217293737947@c.us", "HELLO");
+  // client.sendMessage("5217293737947@c.us", "HELLO");
 
   res.json(randomEmoji.random({ count: 1 })[0]);
 
   // res.json("jaja");
 };
 
-export const wp = { sendMessage, setReminder };
+export const wp = { sendMessage, setReminder, getReminders };

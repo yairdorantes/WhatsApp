@@ -51,7 +51,7 @@ try {
 }
 
 client.on("qr", (qr) => {
-  // qrcode.generate(qr, { small: true });
+  qrcode.generate(qr, { small: true });
 });
 
 client.on("ready", () => {
@@ -59,29 +59,32 @@ client.on("ready", () => {
 });
 client.on("message_reaction", (reaction) => {
   // console.log(reaction);
-
   // console.log(myMessage, "myid");
   if (reaction.msgId.id === myMessage) {
-    console.log("reacciono a mensaje");
+    // console.log("reacciono a mensaje");
     if (reaction.reaction === "👍") yo.delete(true);
   }
 });
+let phones = [];
 
 let yo;
-let brandon = 0;
+let brandon = 32;
 client.on("message", (message) => {
-  console.log(message);
+  // console.log(message);
   if (message.from.includes("g")) {
     console.log("");
   } else {
-    const ms = client.sendMessage(
-      message.from,
-      "Hola 👋, soy un bot 🤖, *Yair* te respondera en un momento 😃, Reacciona a este mensaje 👍 para eliminarme"
-    );
-    ms.then((msg) => {
-      myMessage = msg.id.id;
-      yo = msg;
-    });
+    if (!phones.includes(message.from)) {
+      const ms = client.sendMessage(
+        message.from,
+        "Hola, soy un bot 🤖, *Yair* te respondera en un momento, Reacciona con 👍 a este mensaje para destruirlo"
+      );
+      ms.then((msg) => {
+        myMessage = msg.id.id;
+        yo = msg;
+      });
+      phones.push(message.from);
+    }
   }
 
   if (message.from === "5217293255577-1621863748@g.us") {
