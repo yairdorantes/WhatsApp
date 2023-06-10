@@ -19,15 +19,20 @@ const configuration = new Configuration({
 const openai = new OpenAIApi(configuration);
 let jobs = [];
 async function answerChat(number, order) {
-  const completion = await openai.createCompletion({
-    model: "text-davinci-003",
-    prompt: `Responde a este chat: ${order}`,
-    max_tokens: 50,
-  });
-  let answer = `${completion.data.choices[0].text}. Mensajes enviados por Brandon: ${brandon}`;
-  answer = answer.replace(/\r?\n|\r/g, "");
+  try {
+    const completion = await openai.createCompletion({
+      model: "text-davinci-003",
+      prompt: `Responde a este chat: ${order}`,
+      max_tokens: 50,
+    });
+    let answer = `${completion.data.choices[0].text}. Mensajes enviados por Brandon: ${brandon}`;
+    answer = answer.replace(/\r?\n|\r/g, "");
 
-  client.sendMessage(number, answer);
+    client.sendMessage(number, answer);
+  } catch (error) {
+    console.log(error);
+    client.sendMessage(number, `Mensajes enviados por Brandon: ${brandon}`);
+  }
 }
 
 try {
@@ -48,7 +53,7 @@ client.on("ready", () => {
 });
 
 client.on("message", (message) => {
-  console.log(message);
+  // console.log(message);
   if (message.from === "5217293255577-1621863748@g.us") {
     if (message.author === "5217293629531@c.us") {
       brandon += 1;
