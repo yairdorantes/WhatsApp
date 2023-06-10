@@ -18,7 +18,7 @@ const configuration = new Configuration({
 });
 const openai = new OpenAIApi(configuration);
 let jobs = [];
-async function answerChat(number, order) {
+async function answerChat(messageSource, order) {
   try {
     const completion = await openai.createCompletion({
       model: "text-davinci-003",
@@ -28,10 +28,10 @@ async function answerChat(number, order) {
     let answer = `${completion.data.choices[0].text}. Mensajes enviados por Brandon: ${brandon}`;
     answer = answer.replace(/\r?\n|\r/g, "");
 
-    client.sendMessage(number, answer);
+    messageSource.reply(answer);
   } catch (error) {
     console.log(error);
-    client.sendMessage(number, `Mensajes enviados por Brandon: ${brandon}`);
+    messageSource.reply(`Mensajes enviados por Brandon: ${brandon}`);
   }
 }
 
@@ -57,13 +57,16 @@ client.on("message", (message) => {
   if (message.from === "5217293255577-1621863748@g.us") {
     if (message.author === "5217293629531@c.us") {
       brandon += 1;
-      answerChat(message.from, message.body);
+      answerChat(message, message.body);
     }
   }
+  // answerChat(message, message.body);
   // if (message.from === "120363038511711502@g.us") {
   //   brandon += 1;
   //   answerChat(message.from, message.body);
   // }
+  // message.reply("testing xd");
+
   // const my
 });
 client.initialize();
