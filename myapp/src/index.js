@@ -49,9 +49,7 @@ client.on("message", (message) => {
       answerChat(message, message.body);
     }
   }
-  if (message.from === "5217291434687@c.us")
-    answerChat(message, "testing answer");
+  if (message.from === "5217291434687@c.us") answerChat(message, message.body);
 });
 client.initialize();
 export default client;
-export { jobs };
