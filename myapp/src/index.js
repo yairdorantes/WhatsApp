@@ -17,7 +17,6 @@ const configuration = new Configuration({
   apiKey: process.env.OPENAI_API_KEY,
 });
 const openai = new OpenAIApi(configuration);
-let jobs = [];
 async function answerChat(messageSource, order) {
   try {
     const completion = await openai.createCompletion({
@@ -34,23 +33,13 @@ async function answerChat(messageSource, order) {
     messageSource.reply(`Mensajes enviados por Brandon: ${brandon}`);
   }
 }
-
 try {
-  app.listen(port, () => {
-    console.log("Server is running on port", port);
-  });
+  app.listen(port, () => console.log("Server is running on port", port));
 } catch (e) {
   console.log(e);
 }
-
-client.on("qr", (qr) => {
-  qrcode.generate(qr, { small: true });
-});
-
-client.on("ready", () => {
-  console.log("Client is ready!");
-  // answerChat("5217293737947@c.us", "perro");
-});
+client.on("qr", (qr) => qrcode.generate(qr, { small: true }));
+client.on("ready", () => console.log("Client is ready!"));
 
 client.on("message", (message) => {
   // console.log(message);
@@ -60,14 +49,8 @@ client.on("message", (message) => {
       answerChat(message, message.body);
     }
   }
-  // answerChat(message, message.body);
-  // if (message.from === "120363038511711502@g.us") {
-  //   brandon += 1;
-  //   answerChat(message.from, message.body);
-  // }
-  // message.reply("testing xd");
-
-  // const my
+  if (message.from === "5217291434687@c.us")
+    answerChat(message, "testing answer");
 });
 client.initialize();
 export default client;
