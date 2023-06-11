@@ -1,21 +1,26 @@
-import { createClient } from "pexels";
-const client = createClient(
-  "OYZUHfA9sS01TlruADbxtP07rGT6nVEwHB9Mjvkx4ZszZru43QpAdeZq"
-);
+// import { createClient } from "pexels";
+import { Configuration, OpenAIApi } from "openai";
+import dotenv from "dotenv";
+
+dotenv.config();
+
+const configuration = new Configuration({
+  apiKey: process.env.IMAGES_API_KEY,
+});
+const openai = new OpenAIApi(configuration);
+
 async function getImage(query) {
   try {
-    const photos = await client.photos.search({ query, per_page: 3 });
-    const image = photos.photos[getRandom(0, 2)].src.original;
-
-    return image;
+    const response = await openai.createImage({
+      prompt: query,
+      n: 1,
+      size: "1024x1024",
+    });
+    const image_url = response.data.data[0].url;
+    return image_url;
   } catch (error) {
     console.error(error);
   }
-}
-
-function getRandom(min, max) {
-  const randomInt = Math.floor(Math.random() * (max - min + 1)) + min;
-  return randomInt;
 }
 
 export const pexels = {

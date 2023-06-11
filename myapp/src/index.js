@@ -7,6 +7,7 @@ import { Configuration, OpenAIApi } from "openai";
 import { pexels } from "./Pexels.js";
 let brandon = 0;
 const port = process.env.PORT || 7000;
+console.log(process.env.PORT);
 dotenv.config();
 const client = new Client({
   puppeteer: {
@@ -52,19 +53,27 @@ function getWordsAfter(sentence, givenWord) {
   const givenWordIndex = words.indexOf(givenWord);
 
   if (givenWordIndex !== -1 && givenWordIndex < words.length - 1) {
-    return words.slice(givenWordIndex + 1);
+    return words.slice(givenWordIndex + 1).join(" ");
   } else {
-    return [];
+    return "";
   }
 }
 
 const sendImage = async (message, query) => {
-  const image = await pexels.getImage(query);
+  console.log(query);
   try {
-    const media = await MessageMedia.fromUrl(image);
+    const response = await openai.createImage({
+      prompt: query,
+      n: 1,
+      size: "1024x1024",
+    });
+    const image_url = response.data.data[0].url;
+    const media = await MessageMedia.fromUrl(image_url);
+    // console.log(image_url);
     message.reply(media);
   } catch (error) {
-    console.log(error);
+    // console.log(error);
+    message.reply("Ups, ocurrio un error 😢");
   }
 };
 
