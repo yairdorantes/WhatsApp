@@ -4,11 +4,10 @@ import pkg from "whatsapp-web.js";
 const { Client, MessageMedia } = pkg;
 import qrcode from "qrcode-terminal";
 import { Configuration, OpenAIApi } from "openai";
-import { pexels } from "./Pexels.js";
+dotenv.config();
 let brandon = 0;
 const port = process.env.PORT || 7000;
-console.log(process.env.PORT);
-dotenv.config();
+console.log(process.env.PORT, "j");
 const client = new Client({
   puppeteer: {
     args: ["--no-sandbox", "--disable-setuid-sandbox"],
@@ -23,8 +22,11 @@ async function answerChat(messageSource, order, brandon) {
   try {
     const completion = await openai.createCompletion({
       model: "text-davinci-003",
-      prompt: `Responde a este chat: ${order}`,
-      max_tokens: 50,
+      prompt: `Responde a este chat de WhatsApp: ${order}`,
+      max_tokens: 400,
+      temperature: 0.7,
+      frequency_penalty: 0.3,
+      presence_penalty: 0.2,
     });
     let answer = "";
     if (brandon) {
@@ -37,7 +39,7 @@ async function answerChat(messageSource, order, brandon) {
     messageSource.reply(answer);
   } catch (error) {
     console.log(error);
-    messageSource.reply(`Mensajes enviados por Brandon: ${brandon}`);
+    messageSource.reply(`ups algo salio mal 🫠`);
   }
 }
 try {
@@ -73,13 +75,14 @@ const sendImage = async (message, query) => {
     message.reply(media);
   } catch (error) {
     // console.log(error);
-    message.reply("Ups, ocurrio un error 😢");
+    message.reply("Lo siento, no pude generar eso 😢");
   }
 };
 
 client.on("message", (message) => {
-  // sendImage(message.body);
+  // sendImage(message);
   console.log(message.body);
+
   if (message.mentionedIds.includes("5217293737947@c.us")) {
     if (message.body.includes("draw")) {
       sendImage(message, getWordsAfter(message.body, "draw"));
