@@ -1,13 +1,13 @@
-import app from "./app.js";
 import dotenv from "dotenv";
+import app from "./app.js";
 import pkg from "whatsapp-web.js";
 const { Client, MessageMedia } = pkg;
 import qrcode from "qrcode-terminal";
 import { Configuration, OpenAIApi } from "openai";
 dotenv.config();
 let brandonCont = 0;
+console.log("The port is: ", process.env.PORT);
 const port = process.env.PORT || 7000;
-console.log(process.env.PORT, "j");
 const client = new Client({
   puppeteer: {
     args: ["--no-sandbox", "--disable-setuid-sandbox"],
@@ -17,6 +17,7 @@ const client = new Client({
 const configuration = new Configuration({
   apiKey: process.env.OPENAI_API_KEY,
 });
+
 const openai = new OpenAIApi(configuration);
 async function answerChat(messageSource, order, brandon) {
   try {
@@ -30,7 +31,7 @@ async function answerChat(messageSource, order, brandon) {
     });
     let answer = "";
     if (brandon) {
-      answer = `${completion.data.choices[0].text}. Mensajes enviados por Brandon: ${brandonCont}`;
+      answer = `${completion.data.choices[0].text}. Mensajes enviados por Brandon: *${brandonCont}*`;
     } else {
       answer = `${completion.data.choices[0].text}.`;
     }
@@ -80,8 +81,7 @@ const sendImage = async (message, query) => {
 };
 
 client.on("message", (message) => {
-  // sendImage(message);
-  console.log(message.body);
+  console.log("message: ", message.body);
   if (message.mentionedIds.includes("5217293737947@c.us")) {
     if (message.body.includes("draw")) {
       sendImage(message, getWordsAfter(message.body, "draw"));
@@ -90,8 +90,11 @@ client.on("message", (message) => {
     }
   }
   if (message.from === "5217293255577-1621863748@g.us") {
-    if (message.author === "5217293629531@c.us") {
-      if (typeof message.body === "string") {
+    if (
+      message.author === "5217293629531@c.us" ||
+      message.body.includes("testing brandon")
+    ) {
+      if (message.body.length > 0) {
         brandonCont += 1;
         answerChat(message, message.body, true);
       }
