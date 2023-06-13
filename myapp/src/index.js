@@ -5,7 +5,7 @@ const { Client, MessageMedia } = pkg;
 import qrcode from "qrcode-terminal";
 import { Configuration, OpenAIApi } from "openai";
 dotenv.config();
-let brandon = 0;
+let brandonCont = 0;
 const port = process.env.PORT || 7000;
 console.log(process.env.PORT, "j");
 const client = new Client({
@@ -30,7 +30,7 @@ async function answerChat(messageSource, order, brandon) {
     });
     let answer = "";
     if (brandon) {
-      answer = `${completion.data.choices[0].text}. Mensajes enviados por Brandon: ${brandon}`;
+      answer = `${completion.data.choices[0].text}. Mensajes enviados por Brandon: ${brandonCont}`;
     } else {
       answer = `${completion.data.choices[0].text}.`;
     }
@@ -82,7 +82,6 @@ const sendImage = async (message, query) => {
 client.on("message", (message) => {
   // sendImage(message);
   console.log(message.body);
-
   if (message.mentionedIds.includes("5217293737947@c.us")) {
     if (message.body.includes("draw")) {
       sendImage(message, getWordsAfter(message.body, "draw"));
@@ -92,8 +91,10 @@ client.on("message", (message) => {
   }
   if (message.from === "5217293255577-1621863748@g.us") {
     if (message.author === "5217293629531@c.us") {
-      brandon += 1;
-      answerChat(message, message.body, true);
+      if (typeof message.body === "string") {
+        brandonCont += 1;
+        answerChat(message, message.body, true);
+      }
     }
   }
   if (message.from === "5217291434687@c.us")
