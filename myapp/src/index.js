@@ -5,7 +5,7 @@ const { Client, MessageMedia } = pkg;
 import qrcode from "qrcode-terminal";
 import { Configuration, OpenAIApi } from "openai";
 dotenv.config();
-let brandonCont = 8;
+let brandonCont = 18;
 console.log("The port is: ", process.env.PORT);
 const port = process.env.PORT || 7000;
 const client = new Client({
@@ -73,6 +73,7 @@ const sendImage = async (message, query) => {
     const image_url = response.data.data[0].url;
     const media = await MessageMedia.fromUrl(image_url);
     // console.log(image_url);
+
     message.reply(media);
   } catch (error) {
     // console.log(error);
@@ -85,9 +86,11 @@ client.on("message", (message) => {
   try {
     if (message.mentionedIds.includes("5217293737947@c.us")) {
       if (message.body.includes("draw")) {
+        message.react("🤖");
         sendImage(message, getWordsAfter(message.body, "draw"));
       } else if (message.body.includes("reply")) {
         answerChat(message, getWordsAfter(message.body, "reply"), false);
+        message.react("🤖");
       }
     }
     if (message.from === "5217293255577-1621863748@g.us") {
