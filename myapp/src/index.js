@@ -5,7 +5,7 @@ const { Client, MessageMedia } = pkg;
 import qrcode from "qrcode-terminal";
 import { Configuration, OpenAIApi } from "openai";
 dotenv.config();
-let brandonCont = 0;
+let brandonCont = 8;
 console.log("The port is: ", process.env.PORT);
 const port = process.env.PORT || 7000;
 const client = new Client({
@@ -82,26 +82,30 @@ const sendImage = async (message, query) => {
 
 client.on("message", (message) => {
   console.log("message: ", message.body);
-  if (message.mentionedIds.includes("5217293737947@c.us")) {
-    if (message.body.includes("draw")) {
-      sendImage(message, getWordsAfter(message.body, "draw"));
-    } else if (message.body.includes("reply")) {
-      answerChat(message, getWordsAfter(message.body, "reply"), false);
-    }
-  }
-  if (message.from === "5217293255577-1621863748@g.us") {
-    if (
-      message.author === "5217293629531@c.us" ||
-      message.body.includes("testing brandon")
-    ) {
-      if (message.body.length > 0) {
-        brandonCont += 1;
-        answerChat(message, message.body, true);
+  try {
+    if (message.mentionedIds.includes("5217293737947@c.us")) {
+      if (message.body.includes("draw")) {
+        sendImage(message, getWordsAfter(message.body, "draw"));
+      } else if (message.body.includes("reply")) {
+        answerChat(message, getWordsAfter(message.body, "reply"), false);
       }
     }
+    if (message.from === "5217293255577-1621863748@g.us") {
+      if (
+        message.author === "5217293629531@c.us" ||
+        message.body.includes("testing brandon")
+      ) {
+        if (message.body.length > 0) {
+          brandonCont += 1;
+          answerChat(message, message.body, true);
+        }
+      }
+    }
+    if (message.from === "5217291434687@c.us")
+      answerChat(message, message.body, false);
+  } catch (error) {
+    console.log(error);
   }
-  if (message.from === "5217291434687@c.us")
-    answerChat(message, message.body, false);
 });
 client.initialize();
 export default client;
