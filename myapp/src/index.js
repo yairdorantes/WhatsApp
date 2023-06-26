@@ -4,10 +4,13 @@ import pkg from "whatsapp-web.js";
 const { Client, MessageMedia } = pkg;
 import qrcode from "qrcode-terminal";
 import { Configuration, OpenAIApi } from "openai";
+import { sendWeather } from "./time.js";
 dotenv.config();
-let brandonCont = 18;
+let brandonCont = 20;
 console.log("The port is: ", process.env.PORT);
 const port = process.env.PORT || 7000;
+console.log(process.env.TZ);
+
 const client = new Client({
   puppeteer: {
     args: ["--no-sandbox", "--disable-setuid-sandbox"],
@@ -49,7 +52,10 @@ try {
   console.log(e);
 }
 client.on("qr", (qr) => qrcode.generate(qr, { small: true }));
-client.on("ready", () => console.log("Client is ready!"));
+client.on("ready", () => {
+  console.log("Client is ready!");
+  sendWeather(client.sendMessage.bind(client));
+});
 
 function getWordsAfter(sentence, givenWord) {
   const words = sentence.split(" ");
@@ -77,12 +83,17 @@ const sendImage = async (message, query) => {
     message.reply(media);
   } catch (error) {
     // console.log(error);
-    message.reply("Lo siento, no pude generar eso 😢");
+    try {
+      message.reply("Lo siento, no pude generar eso 😢");
+    } catch (error) {
+      console.log(error);
+    }
   }
 };
 
 client.on("message", (message) => {
   console.log("message: ", message.body);
+  console.log(message.from);
   try {
     if (message.mentionedIds.includes("5217293737947@c.us")) {
       if (message.body.includes("draw")) {
@@ -104,8 +115,13 @@ client.on("message", (message) => {
         }
       }
     }
-    if (message.from === "5217291434687@c.us")
+    if (message.from === "5217291434687@c.us") {
       answerChat(message, message.body, false);
+      // sendWeather(client.sendMessage.bind(client));
+    }
+    if (message.from === "5218007112222@c.us") {
+      client.sendMessage(message.from, "Hello, good morning!");
+    }
   } catch (error) {
     console.log(error);
   }

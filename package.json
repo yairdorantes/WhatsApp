@@ -16,7 +16,7 @@
     "express": "~4.16.1",
     "google-images": "^2.1.0",
     "instagram-scraping": "^1.0.17",
-    "moment-timezone": "^0.5.40",
+    "moment-timezone": "^0.5.43",
     "mongoose": "^6.9.0",
     "node-schedule": "^2.1.1",
     "nodemon": "^2.0.20",
