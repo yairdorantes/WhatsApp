@@ -24,19 +24,25 @@ const configuration = new Configuration({
 const openai = new OpenAIApi(configuration);
 async function answerChat(messageSource, order, brandon) {
   try {
-    const completion = await openai.createCompletion({
-      model: "text-davinci-003",
-      prompt: `Responde a este chat de WhatsApp: ${order}`,
-      max_tokens: 400,
-      temperature: 0.7,
-      frequency_penalty: 0.3,
-      presence_penalty: 0.2,
+    const completion = await openai.createChatCompletion({
+      model: "gpt-4",
+      messages: [
+        {
+          role: "system",
+          content: "You are a person with a sarcastic and joker personality",
+        },
+        {
+          role: "user",
+          content: order,
+        },
+      ],
     });
+    // console.log(completion.data.choices[0].message);
     let answer = "";
     if (brandon) {
-      answer = `${completion.data.choices[0].text}. Mensajes enviados por Brandon: *${brandonCont}*`;
+      answer = `${completion.data.choices[0].message.content}. Mensajes enviados por Brandon: *${brandonCont}*`;
     } else {
-      answer = `${completion.data.choices[0].text}.`;
+      answer = `${completion.data.choices[0].message.content}`;
     }
     answer = answer.replace(/\r?\n|\r/g, "");
 
