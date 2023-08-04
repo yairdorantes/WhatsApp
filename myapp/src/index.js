@@ -6,7 +6,7 @@ import qrcode from "qrcode-terminal";
 import { Configuration, OpenAIApi } from "openai";
 import { sendWeather } from "./time.js";
 dotenv.config();
-let brandonCont = 20;
+let brandonCont = 104;
 console.log("The port is: ", process.env.PORT);
 const port = process.env.PORT || 7000;
 console.log(process.env.TZ);
@@ -117,7 +117,8 @@ client.on("message", (message) => {
       ) {
         if (message.body.length > 0) {
           brandonCont += 1;
-          answerChat(message, message.body, true);
+          // answerChat(message, message.body, true);
+          client.sendMessage(message.from,`Mensajes enviados por brandon *${brandonCont}*`)
         }
       }
     }
