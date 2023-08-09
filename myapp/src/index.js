@@ -118,16 +118,17 @@ client.on("message", (message) => {
         if (message.body.length > 0) {
           brandonCont += 1;
           // answerChat(message, message.body, true);
-          client.sendMessage(message.from,`Mensajes enviados por brandon *${brandonCont}*`)
+          client.sendMessage(
+            message.from,
+            `Mensajes enviados por brandon *${brandonCont}*`
+          );
         }
       }
     }
     if (message.from === "5217291434687@c.us") {
+      console.log("master");
       answerChat(message, message.body, false);
       // sendWeather(client.sendMessage.bind(client));
-    }
-    if (message.from === "5218007112222@c.us") {
-      client.sendMessage(message.from, "Hello, good morning!");
     }
   } catch (error) {
     console.log(error);
