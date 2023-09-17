@@ -11,12 +11,7 @@ console.log("The port is: ", process.env.PORT);
 const port = process.env.PORT || 7000;
 console.log(process.env.TZ);
 
-const client = new Client({
-  puppeteer: {
-    args: ["--no-sandbox", "--disable-setuid-sandbox"],
-    headless: true,
-  },
-});
+const client = new Client();
 const configuration = new Configuration({
   apiKey: process.env.OPENAI_API_KEY,
 });
@@ -57,10 +52,14 @@ try {
 } catch (e) {
   console.log(e);
 }
-client.on("qr", (qr) => qrcode.generate(qr, { small: true }));
+client.on("qr", (qr) => {
+  // qrcode.generate(qr, { small: true });
+  // console.log(qr);
+  console.log(qr);
+});
 client.on("ready", () => {
   console.log("Client is ready!");
-  sendWeather(client.sendMessage.bind(client));
+  client.sendMessage("5217293737947@c.us", "hello ");
 });
 
 function getWordsAfter(sentence, givenWord) {
@@ -100,6 +99,7 @@ const sendImage = async (message, query) => {
 client.on("message", (message) => {
   console.log("message: ", message.body);
   console.log(message.from);
+
   try {
     if (message.mentionedIds.includes("5217293737947@c.us")) {
       if (message.body.includes("draw")) {
@@ -127,7 +127,8 @@ client.on("message", (message) => {
     }
     if (message.from === "5217291434687@c.us") {
       console.log("master");
-      answerChat(message, message.body, false);
+      message.reply("hello there");
+      // answerChat(message, message.body, false);
       // sendWeather(client.sendMessage.bind(client));
     }
   } catch (error) {
